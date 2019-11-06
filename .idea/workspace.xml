@@ -2,16 +2,11 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7c67d9a6-c4ae-4fc1-8de1-074a33fb75be" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chatBot.py" beforeDir="false" afterPath="$PROJECT_DIR$/chatBot.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/dsl.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/dsl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/settings.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/quepy" beforeDir="false" afterPath="$PROJECT_DIR$/quepy" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quepy/examples/dbpedia/dbpedia/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/quepy/examples/dbpedia/dbpedia/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quepy/examples/dbpedia/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/quepy/examples/dbpedia/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/quepy/quepy/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/quepy/quepy/settings.py" afterDir="false" />
     </list>
+    <list id="ec2de1c1-82fd-4283-8c31-3a453dfd3391" name="questioning the age of someone resolved + comments added" comment="" />
+    <list id="16d91c68-ff17-4db6-ac07-4a472c9fb9f5" name="Revert &quot;questioning the age of someone resolved + comments added&quot;" comment="Revert &quot;questioning the age of someone resolved + comments added&quot;&#10;&#10;This reverts commit 04eaa593" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -107,12 +102,31 @@
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="7c67d9a6-c4ae-4fc1-8de1-074a33fb75be" name="Default Changelist" comment="" />
+      <changelist id="ec2de1c1-82fd-4283-8c31-3a453dfd3391" name="questioning the age of someone resolved + comments added" comment="" />
       <created>1571485672097</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1571485672097</updated>
     </task>
+    <task id="LOCAL-00001" summary="questioning the age of someone resolved + comments added">
+      <created>1573076026872</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1573076026872</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
+  </component>
+  <component name="Vcs.Log.History.Properties">
+    <option name="COLUMN_ORDER">
+      <list>
+        <option value="0" />
+        <option value="2" />
+        <option value="3" />
+        <option value="1" />
+      </list>
+    </option>
   </component>
   <component name="Vcs.Log.Tabs.Properties">
     <option name="TAB_STATES">
@@ -120,11 +134,16 @@
         <entry key="MAIN">
           <value>
             <State>
+              <option name="SHOW_ROOT_NAMES" value="true" />
               <option name="COLUMN_ORDER" />
             </State>
           </value>
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="questioning the age of someone resolved + comments added" />
+    <option name="LAST_COMMIT_MESSAGE" value="questioning the age of someone resolved + comments added" />
   </component>
 </project>
