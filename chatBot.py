@@ -13,21 +13,23 @@ sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 
 dbpedia = quepy.install("dbpedia")
 
+
 # get question from user input
 def getQuestion():
     s = str(raw_input("enter a question: \n"))
     return s
 
+
 # transform question to sparql query
 def get_SparqlQuery(question):
     target, query, metadata = dbpedia.get_query(question)
-    #query = query[:-2]
-    #query += "FILTER (langMatches(lang(?x2),\"en\"))\n}"
+    # query = query[:-2]
+    # query += "FILTER (langMatches(lang(?x2),\"en\"))\n}"
     return query
 
-#get answer from sparql query - version 1
-def get_answer_list(sparql_query, sparql):
 
+# get answers as list from sparql query
+def get_answer_list(sparql_query, sparql):
     sparql.setQuery(sparql_query)
     sparql.setReturnFormat(JSON)
     try:
@@ -72,6 +74,7 @@ def print_literal(results, target, metadata=None):
             print literal
 
 
+# print time format for questions like "What time is it in Romania?"
 def print_time(results, target, metadata=None):
     gmt = time.mktime(time.gmtime())
     gmt = datetime.datetime.fromtimestamp(gmt)
@@ -113,13 +116,18 @@ def print_time(results, target, metadata=None):
             delta = datetime.timedelta(hours=offset)
             the_time = gmt + delta
 
-            print the_time.strftime("%H:%M on %A")
+            # prints time, day of week and date
+            print the_time.strftime("%H:%M on %A, %d %B %Y")
 
 
 def print_age(results, target, metadata=None):
-    assert len(results["results"]["bindings"]) == 1
+    # assert len(results["results"]["bindings"]) == 1
+    # because there might be more results
+    if len(results["results"]["bindings"]) == 1:
+        birth_date = results["results"]["bindings"][0][target]["value"]
+    else:
+        birth_date = results["results"]["bindings"][1][target]["value"]
 
-    birth_date = results["results"]["bindings"][0][target]["value"]
     year, month, days = birth_date.split("-")
 
     birth_date = datetime.date(int(year), int(month), int(days))
@@ -156,7 +164,6 @@ def wikipedia2dbpedia(wikipedia_url):
 
 
 def get_answer(question, sparql):
-
     if "-d" in sys.argv:
         quepy.set_loglevel("DEBUG")
         sys.argv.remove("-d")
@@ -208,4 +215,6 @@ def get_answer(question, sparql):
 
 
 question = getQuestion()
+# query = get_SparqlQuery(question)
+# print(get_answer_list(query,sparql))
 get_answer(question, sparql)

@@ -1,12 +1,5 @@
 # coding: utf-8
 
-# Copyright (c) 2012, Machinalis S.R.L.
-# This file is part of quepy and is distributed under the Modified BSD License.
-# You should have received a copy of license in the LICENSE file.
-#
-# Authors: Rafael Carrascosa <rcarrascosa@machinalis.com>
-#          Gonzalo Garcia Berrotaran <ggarcia@machinalis.com>
-
 """
 Settings.
 """
@@ -34,4 +27,5 @@ PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX db: <http://dbpedia.org/resource/>
 PREFIX dbo: <http://dbpedia.org/ontology/>
 PREFIX vrank:<http://purl.org/voc/vrank#>
+PREFIX wiki:<http://www.wikidata.org/>
 """
