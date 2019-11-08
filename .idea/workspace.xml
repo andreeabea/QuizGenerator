@@ -3,11 +3,7 @@
   <component name="ChangeListManager">
     <list default="true" id="7c67d9a6-c4ae-4fc1-8de1-074a33fb75be" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/country.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/country.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/movies.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/movies.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/music.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/music.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/people.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/people.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/populated_place.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/populated_place.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chatBot.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <list id="ec2de1c1-82fd-4283-8c31-3a453dfd3391" name="questioning the age of someone resolved + comments added" comment="" />
     <list id="16d91c68-ff17-4db6-ac07-4a472c9fb9f5" name="Revert &quot;questioning the age of someone resolved + comments added&quot;" comment="Revert &quot;questioning the age of someone resolved + comments added&quot;&#10;&#10;This reverts commit 04eaa593" />
@@ -31,7 +27,7 @@
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-    <property name="settings.editor.selected.configurable" value="editor.preferences.fonts.default" />
+    <property name="settings.editor.selected.configurable" value="project.propVCSSupport.Mappings" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
@@ -63,7 +59,7 @@
       <option name="IS_MODULE_SDK" value="false" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/chatBot.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -126,7 +122,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573077132363</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="updated">
+      <created>1573196133524</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1573196133524</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -155,6 +158,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="questioning the age of someone resolved + comments added" />
-    <option name="LAST_COMMIT_MESSAGE" value="questioning the age of someone resolved + comments added" />
+    <MESSAGE value="updated" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated" />
   </component>
 </project>
