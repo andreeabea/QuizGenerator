@@ -188,17 +188,15 @@ def get_answer(question, sparql):
 
     target, query, metadata = dbpedia.get_query(question)
 
+    if query is None:
+        return "Query not generated :(\n"
+
     if isinstance(metadata, tuple):
         query_type = metadata[0]
         metadata = metadata[1]
     else:
         query_type = metadata
         metadata = None
-
-    if query is None:
-        print "Query not generated :(\n"
-
-    print query
 
     if target.startswith("?"):
         target = target[1:]
@@ -213,8 +211,25 @@ def get_answer(question, sparql):
     print_handlers[query_type](results, target, metadata)
     print
 
+    return query
 
-question = getQuestion()
-# query = get_SparqlQuery(question)
-# print(get_answer_list(query,sparql))
-get_answer(question, sparql)
+
+def getQuestions():
+    i = 0
+    questions = []
+    while i < 5:
+        question = getQuestion()
+        query = get_answer(question, sparql)
+
+        if query != "Query not generated :(\n":
+            i += 1
+            questions.append(question)
+        else:
+            print "Choose another question\n"
+
+    return questions
+
+
+questions = getQuestions()
+for q in questions:
+    print q + "\n"

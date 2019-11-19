@@ -2,8 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7c67d9a6-c4ae-4fc1-8de1-074a33fb75be" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/chatBot.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/dbpedia/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <list id="ec2de1c1-82fd-4283-8c31-3a453dfd3391" name="questioning the age of someone resolved + comments added" comment="" />
     <list id="16d91c68-ff17-4db6-ac07-4a472c9fb9f5" name="Revert &quot;questioning the age of someone resolved + comments added&quot;" comment="Revert &quot;questioning the age of someone resolved + comments added&quot;&#10;&#10;This reverts commit 04eaa593" />
@@ -129,7 +131,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573196133524</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="updated">
+      <created>1573199356409</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1573199356409</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -157,6 +166,9 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <ignored-roots>
+      <path value="$PROJECT_DIR$/quepy" />
+    </ignored-roots>
     <MESSAGE value="questioning the age of someone resolved + comments added" />
     <MESSAGE value="updated" />
     <option name="LAST_COMMIT_MESSAGE" value="updated" />

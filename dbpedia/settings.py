@@ -26,6 +26,4 @@ PREFIX dbpprop: <http://dbpedia.org/property/>
 PREFIX dbpedia-owl: <http://dbpedia.org/ontology/>
 PREFIX db: <http://dbpedia.org/resource/>
 PREFIX dbo: <http://dbpedia.org/ontology/>
-PREFIX vrank:<http://purl.org/voc/vrank#>
-PREFIX wiki:<http://www.wikidata.org/>
 """
