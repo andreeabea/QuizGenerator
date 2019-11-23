@@ -5,6 +5,7 @@ import sys
 import time
 import traceback
 import quepy
+import json
 
 from SPARQLWrapper import SPARQLWrapper, JSON
 
@@ -175,14 +176,6 @@ def get_answer(question, sparql):
             print wikipedia2dbpedia(sys.argv[1])
             sys.exit(0)
 
-    print_handlers = {
-        "define": print_define,
-        "enum": print_enum,
-        "time": print_time,
-        "literal": print_literal,
-        "age": print_age,
-    }
-
     print question
     print "-" * len(question)
 
@@ -190,13 +183,6 @@ def get_answer(question, sparql):
 
     if query is None:
         return "Query not generated :(\n"
-
-    if isinstance(metadata, tuple):
-        query_type = metadata[0]
-        metadata = metadata[1]
-    else:
-        query_type = metadata
-        metadata = None
 
     if target.startswith("?"):
         target = target[1:]
@@ -206,10 +192,7 @@ def get_answer(question, sparql):
         results = sparql.query().convert()
 
     if not results["results"]["bindings"]:
-        print "No answer found :("
-
-    print_handlers[query_type](results, target, metadata)
-    print
+        return "No answer found"
 
     return query
 
@@ -221,7 +204,7 @@ def getQuestions():
         question = getQuestion()
         query = get_answer(question, sparql)
 
-        if query != "Query not generated :(\n":
+        if query != "Query not generated :(\n" and query != "No answer found":
             i += 1
             questions.append(question)
         else:
@@ -231,5 +214,42 @@ def getQuestions():
 
 
 questions = getQuestions()
-for q in questions:
-    print q + "\n"
+
+with open('questions.txt', 'a') as outfile:
+    json.dump(questions, outfile)
+
+
+def generateQuiz(questions):
+    print_handlers = {
+        "define": print_define,
+        "enum": print_enum,
+        "time": print_time,
+        "literal": print_literal,
+        "age": print_age,
+    }
+
+    for question in questions:
+        answers = []
+        target, query, metadata = dbpedia.get_query(question)
+
+        if isinstance(metadata, tuple):
+            query_type = metadata[0]
+            metadata = metadata[1]
+        else:
+            query_type = metadata
+            metadata = None
+
+        if target.startswith("?"):
+            target = target[1:]
+        if query:
+            sparql.setQuery(query)
+            sparql.setReturnFormat(JSON)
+            results = sparql.query().convert()
+
+        correctAnswer = print_handlers[query_type](results, target, metadata)
+        print
+
+        answers.append(correctAnswer)
+
+
+generateQuiz(questions)
