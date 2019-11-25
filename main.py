@@ -1,11 +1,11 @@
 # coding=utf-8
 import datetime
-import random
 import sys
 import time
 import traceback
 import quepy
-import json
+import random
+import numpy
 
 from SPARQLWrapper import SPARQLWrapper, JSON
 
@@ -17,7 +17,9 @@ dbpedia = quepy.install("dbpedia")
 
 # get question from user input
 def getQuestion():
+    print "-" * 100
     s = str(raw_input("enter a question: \n"))
+    print "-" * 100
     return s
 
 
@@ -48,37 +50,45 @@ def get_answer_list(sparql_query, sparql):
 
 
 def print_define(results, target, metadata=None):
+    answer = ""
     for result in results["results"]["bindings"]:
         if result[target]["xml:lang"] == "en":
-            print result[target]["value"]
-            print
+            answer += result[target]["value"]
+
+    return answer
 
 
 def print_enum(results, target, metadata=None):
     used_labels = []
-
+    answer = ""
     for result in results["results"]["bindings"]:
         if result[target]["type"] == u"literal":
             if result[target]["xml:lang"] == "en":
                 label = result[target]["value"]
                 if label not in used_labels:
                     used_labels.append(label)
-                    print label
+                    answer += label
+                    answer += "\n"
+    return answer
 
 
 def print_literal(results, target, metadata=None):
+    answer = ""
     for result in results["results"]["bindings"]:
         literal = result[target]["value"]
         if metadata:
-            print metadata.format(literal)
+            answer += metadata.format(literal)
         else:
-            print literal
+            answer += literal
+
+    return answer
 
 
 # print time format for questions like "What time is it in Romania?"
 def print_time(results, target, metadata=None):
     gmt = time.mktime(time.gmtime())
     gmt = datetime.datetime.fromtimestamp(gmt)
+    answer = ""
 
     for result in results["results"]["bindings"]:
         offset = result[target]["value"].replace(u"−", u"-")
@@ -105,7 +115,7 @@ def print_time(results, target, metadata=None):
             location_string = random.choice(["where you are",
                                              "your location"])
 
-            print "Between %s %s %s, depending on %s" % \
+            answer += "Between %s %s %s, depending on %s" % \
                   (from_time.strftime("%H:%M"),
                    connector,
                    to_time.strftime("%H:%M on %A"),
@@ -118,12 +128,16 @@ def print_time(results, target, metadata=None):
             the_time = gmt + delta
 
             # prints time, day of week and date
-            print the_time.strftime("%H:%M on %A, %d %B %Y")
+            answer += the_time.strftime("%H:%M on %A, %d %B %Y")
+
+    return answer
 
 
 def print_age(results, target, metadata=None):
     # assert len(results["results"]["bindings"]) == 1
     # because there might be more results
+    answer = ""
+
     if len(results["results"]["bindings"]) == 1:
         birth_date = results["results"]["bindings"][0][target]["value"]
     else:
@@ -137,7 +151,9 @@ def print_age(results, target, metadata=None):
     now = now.date()
 
     age = now - birth_date
-    print "{} years old".format(age.days / 365)
+    answer += "{} years old".format(age.days / 365)
+
+    return answer
 
 
 def wikipedia2dbpedia(wikipedia_url):
@@ -176,9 +192,6 @@ def get_answer(question, sparql):
             print wikipedia2dbpedia(sys.argv[1])
             sys.exit(0)
 
-    print question
-    print "-" * len(question)
-
     target, query, metadata = dbpedia.get_query(question)
 
     if query is None:
@@ -213,14 +226,13 @@ def getQuestions():
     return questions
 
 
-questions = getQuestions()
+def saveQuestions(questions):
+    with open('questions.txt', 'a') as outfile:
+        for question in questions:
+            outfile.write(question+"\n")
 
-with open('questions.txt', 'a') as outfile:
-    json.dump(questions, outfile)
 
-
-def generateQuiz(questions):
-    print_handlers = {
+print_handlers = {
         "define": print_define,
         "enum": print_enum,
         "time": print_time,
@@ -228,9 +240,49 @@ def generateQuiz(questions):
         "age": print_age,
     }
 
+
+def findWrongAnswers():
+    answers = []
+    num_lines = sum(1 for line in open('questions.txt'))
+    for i in range(3):
+        x = random.randint(0, num_lines)
+        with open('questions.txt') as filein:
+            line = filein.readline()
+            cnt = 0
+            while cnt < x:
+                cnt += 1
+                line = filein.readline()
+        target, query, metadata = dbpedia.get_query(line)
+
+        if isinstance(metadata, tuple):
+            query_type = metadata[0]
+            metadata = metadata[1]
+        else:
+            query_type = metadata
+            metadata = None
+
+        if target.startswith("?"):
+            target = target[1:]
+        if query:
+            sparql.setQuery(query)
+            sparql.setReturnFormat(JSON)
+            results = sparql.query().convert()
+
+        answer = print_handlers[query_type](results, target, metadata)
+
+        answers.append(answer)
+
+    return answers
+
+
+def generateQuiz(questions):
+
     for question in questions:
-        answers = []
         target, query, metadata = dbpedia.get_query(question)
+
+        print "-" * 100
+        print question
+        print "-" * 100
 
         if isinstance(metadata, tuple):
             query_type = metadata[0]
@@ -247,9 +299,23 @@ def generateQuiz(questions):
             results = sparql.query().convert()
 
         correctAnswer = print_handlers[query_type](results, target, metadata)
-        print
 
+        answers = findWrongAnswers()
         answers.append(correctAnswer)
 
+        randomPositions = numpy.random.permutation(4)
+        for i in range(4):
+            print(str(i) + ". " + answers[randomPositions[i]])
 
+        givenAnswer = input("Choose an answer: ")
+        if answers[randomPositions[givenAnswer]] == correctAnswer:
+            print("Correct!\n")
+        else:
+            print("Incorrect!:(\n")
+
+
+questions = getQuestions()
+saveQuestions(questions)
 generateQuiz(questions)
+
+

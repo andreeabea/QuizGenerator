@@ -1,1 +1,43 @@
-["What is the capital of Romania?", "What is the population of China?", "What time is it in Luxembourg?", "List movies directed by Quentin Tarantino", "Who wrote The Little Prince?", "What is the capital of Germany?"]["Who is Bill Gates?", "Who is Jeff Bezos?", "Where is the Eiffel Tower?", "How old was Michael Jackson?", "What is the language of Argentina?"]["List Microsoft software", "What is the capital of Bolivia?", "What are the members of Metallica?", "What is the music genre of Gorillaz?", "List albums of Pink Floyd"]["Who was Marie Curie?", "Where is Bill Gates from?", "What is the capital of Canada?", "What is a blowtorch?", "How old is Barack Obama?"]
+What is the capital of Romania?
+What is the population of China?
+What time is it in Luxembourg?
+List movies directed by Quentin Tarantino
+Who wrote The Little Prince?
+What is the capital of Germany?
+Who is Bill Gates?
+Who is Jeff Bezos?
+Where is the Eiffel Tower?
+How old was Michael Jackson?
+List Microsoft software
+What is the capital of Bolivia?
+What are the members of Metallica?
+What is the music genre of Gorillaz?
+List albums of Pink Floyd
+Who was Marie Curie?
+Where is Bill Gates from?
+What is the capital of Canada?
+What is a blowtorch?
+How old is Barack Obama?
+What is Samsung?
+What is the capital of Eritrea?
+Who is Nelson Mandela?
+What is the music genre of Metallica?
+How many people live in Romania?
+Who is Mark Zuckerberg?
+How old is Jeff Bezos?
+What time is it in Mexico?
+What is the capital of Spain?
+What is JetBrains?
+Who is Abraham Lincoln?
+What is the capital of Thailand?
+Where is the Louvre?
+Where is Barack Obama from?
+What is the capital of Germany?
+Where is the Statue of Liberty?
+Who is Shakira?
+What is the music genre of Black Sabbath?
+What is the capital of Belgium?
+How old is Shakira?
+Where is Shakira from?
+What is the population of India?
+What is Google?

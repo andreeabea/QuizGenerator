@@ -55,7 +55,7 @@ class CapitalOfQuestion(QuestionTemplate):
 # FIXME: the generated query needs FILTER isLiteral() to the head
 # because dbpedia sometimes returns different things
 class LanguageOfQuestion(QuestionTemplate):
-    """
+    """ NU MERGE!!!
     Regex for questions about the language spoken in a country.
     Ex: "What is the language of Argentina?"
         "what language is spoken in Argentina?"
