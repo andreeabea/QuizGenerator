@@ -2,11 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7c67d9a6-c4ae-4fc1-8de1-074a33fb75be" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/questions.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/basic.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/basic.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dbpedia/country.py" beforeDir="false" afterPath="$PROJECT_DIR$/dbpedia/country.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/questions.txt" beforeDir="false" afterPath="$PROJECT_DIR$/questions.txt" afterDir="false" />
     </list>
     <list id="ec2de1c1-82fd-4283-8c31-3a453dfd3391" name="questioning the age of someone resolved + comments added" comment="" />
     <list id="16d91c68-ff17-4db6-ac07-4a472c9fb9f5" name="Revert &quot;questioning the age of someone resolved + comments added&quot;" comment="Revert &quot;questioning the age of someone resolved + comments added&quot;&#10;&#10;This reverts commit 04eaa593" />
@@ -27,11 +25,13 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
   <component name="ProjectId" id="1SQAuyehW6LcN5TO5Ge81ODirPC" />
-  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
   <component name="PropertiesComponent">
     <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="ignore_missing_gitignore" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/questions.json" />
     <property name="settings.editor.selected.configurable" value="preferences.pluginManager" />
   </component>
   <component name="RecentsManager">
@@ -162,7 +162,14 @@
       <option name="project" value="LOCAL" />
       <updated>1574544066671</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="quiz generation made">
+      <created>1574707556444</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1574707556444</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.History.Properties">
@@ -190,6 +197,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <ignored-roots>
       <path value="$PROJECT_DIR$/quepy" />
     </ignored-roots>
@@ -197,6 +205,26 @@
     <MESSAGE value="updated" />
     <MESSAGE value="quiz generated with correct answers" />
     <MESSAGE value="gitignore file added" />
-    <option name="LAST_COMMIT_MESSAGE" value="gitignore file added" />
+    <MESSAGE value="quiz generation made" />
+    <option name="LAST_COMMIT_MESSAGE" value="quiz generation made" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/main.py</url>
+          <line>369</line>
+          <option name="timeStamp" value="10" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+    <watches-manager>
+      <configuration name="PythonConfigurationType">
+        <watch expression="category" language="Python" />
+        <watch expression="jsonData" language="Python" />
+        <watch expression="jsonData['Who is Bill Gates?']" language="Python" />
+        <watch expression="jsonData[question][0]['category']" language="Python" />
+      </configuration>
+    </watches-manager>
   </component>
 </project>

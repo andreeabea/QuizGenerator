@@ -1,5 +1,6 @@
 # coding=utf-8
 import datetime
+import json
 import sys
 import time
 import traceback
@@ -14,6 +15,8 @@ sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 
 dbpedia = quepy.install("dbpedia")
 
+# questions data dictionary obtained from the json file
+jsonData = {}
 
 # get question from user input
 def getQuestion():
@@ -210,10 +213,51 @@ def get_answer(question, sparql):
     return query
 
 
+def findCategory(query):
+    # returns category of question based on the query structure
+
+    if "foaf:Person" in query:
+        if "dbpedia-owl:birthPlace" in query:
+            return "personBirthPlace"
+        else:
+            if "dbo:birthDate" in query:
+                return "personBirthDate"
+        return "person"
+
+    if "dbpedia:Place" in query:
+        return "place"
+
+    if "dbpedia-owl:capital" in query:
+        return "capital"
+
+    if "dbpedia-owl:Country" in query:
+        return "country"
+
+    if "dbpedia-owl:PopulatedPlace" in query:
+        return "populatedPlace"
+
+    if "dbpedia-owl:Band" in query:
+        return "band"
+
+    if "dbpedia-owl:Album" in query:
+        return "album"
+
+    if "dbpedia-owl:TelevisionShow" in query:
+        return "TVshow"
+
+    if "dbpedia-owl:Film" in query:
+        return "film"
+
+    if "dbpprop:utcOffset" in query:
+        return "time"
+
+    return "none"
+
+
 def getQuestions():
     i = 0
     questions = []
-    while i < 5:
+    while i < 1:
         question = getQuestion()
         query = get_answer(question, sparql)
 
@@ -226,10 +270,28 @@ def getQuestions():
     return questions
 
 
+def dumpJsonData():
+    with open('questions.json', 'w') as outfile:
+        json.dump(jsonData, outfile)
+
+
 def saveQuestions(questions):
-    with open('questions.txt', 'a') as outfile:
-        for question in questions:
-            outfile.write(question+"\n")
+    global jsonData
+    # questions data in json format
+    with open('questions.json') as json_file:
+        jsonData = json.load(json_file)
+
+    # checks if question already exists
+    for question in questions:
+        if question not in jsonData:
+            jsonData[question] = []
+            jsonData[question].append({
+                'category': '',
+                })
+            with open('questions.txt', 'a') as outfile:
+                outfile.write(question + "\n")
+
+    dumpJsonData()
 
 
 print_handlers = {
@@ -241,10 +303,16 @@ print_handlers = {
     }
 
 
-def findWrongAnswers():
+def findWrongAnswers(question):
+
+    global jsonData
+
     answers = []
+
     num_lines = sum(1 for line in open('questions.txt'))
-    for i in range(3):
+
+    i = 0
+    while i < 3:
         x = random.randint(0, num_lines)
         with open('questions.txt') as filein:
             line = filein.readline()
@@ -253,6 +321,17 @@ def findWrongAnswers():
                 cnt += 1
                 line = filein.readline()
         target, query, metadata = dbpedia.get_query(line)
+
+        if line[len(line)-1] == '\n':
+            line = line[:-1]
+
+        # check if question already has its category in the json file
+        if jsonData[line][0]['category'] == '':
+            category = findCategory(query)
+            jsonData[line][0]['category'] = category
+
+        if jsonData[question][0]['category'] != jsonData[line][0]['category']:
+            continue
 
         if isinstance(metadata, tuple):
             query_type = metadata[0]
@@ -271,11 +350,14 @@ def findWrongAnswers():
         answer = print_handlers[query_type](results, target, metadata)
 
         answers.append(answer)
+        i += 1
 
     return answers
 
 
-def generateQuiz(questions):
+def generateQuiz(question):
+
+    global jsonData
 
     for question in questions:
         target, query, metadata = dbpedia.get_query(question)
@@ -283,6 +365,11 @@ def generateQuiz(questions):
         print "-" * 100
         print question
         print "-" * 100
+
+        # check if question already has its category in the json file
+        if jsonData[question][0]['category'] == '':
+            category = findCategory(query)
+            jsonData[question][0]['category'] = category
 
         if isinstance(metadata, tuple):
             query_type = metadata[0]
@@ -300,7 +387,7 @@ def generateQuiz(questions):
 
         correctAnswer = print_handlers[query_type](results, target, metadata)
 
-        answers = findWrongAnswers()
+        answers = findWrongAnswers(question)
         answers.append(correctAnswer)
 
         randomPositions = numpy.random.permutation(4)
@@ -318,4 +405,4 @@ questions = getQuestions()
 saveQuestions(questions)
 generateQuiz(questions)
 
-
+dumpJsonData()
