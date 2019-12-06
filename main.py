@@ -216,13 +216,32 @@ def get_answer(question, sparql):
 def findCategory(query):
     # returns category of question based on the query structure
 
+    if "dbpprop:starring" in query or "dbpedia-owl:Album" in query:
+        return "list"
+
+    if "dbpedia-owl:numberOfEpisodes" in query:
+        return "number"
+
+    if "dbpedia-owl:author" in query:
+        return "author"
+
+    if "dbpprop:creator" in query:
+        return "person";
+
     if "foaf:Person" in query:
         if "dbpedia-owl:birthPlace" in query:
-            return "personBirthPlace"
+            return "place"
         else:
             if "dbo:birthDate" in query:
-                return "personBirthDate"
+                return "number"
         return "person"
+
+    if "dbpedia-owl:bandMember" in query:
+        #return "bandMember"
+        return "list"
+
+    if "dbpprop:utcOffset" in query:
+        return "datetime"
 
     if "dbpedia:Place" in query:
         return "place"
@@ -234,7 +253,10 @@ def findCategory(query):
         return "country"
 
     if "dbpedia-owl:PopulatedPlace" in query:
-        return "populatedPlace"
+        return "number"
+
+    if "dbpedia-owl:genre" in query:
+        return "genre"
 
     if "dbpedia-owl:Band" in query:
         return "band"
@@ -245,11 +267,11 @@ def findCategory(query):
     if "dbpedia-owl:TelevisionShow" in query:
         return "TVshow"
 
+    if "dbpedia-owl:releaseDate" in query or "dbpprop:yearsActive" in query:
+        return "datetime"
+
     if "dbpedia-owl:Film" in query:
         return "film"
-
-    if "dbpprop:utcOffset" in query:
-        return "time"
 
     return "none"
 
@@ -322,13 +344,16 @@ def findWrongAnswers(question):
                 line = filein.readline()
         target, query, metadata = dbpedia.get_query(line)
 
-        if line[len(line)-1] == '\n':
+        if len(line) > 0 and line[len(line)-1] == '\n':
             line = line[:-1]
 
         # check if question already has its category in the json file
-        if jsonData[line][0]['category'] == '':
-            category = findCategory(query)
-            jsonData[line][0]['category'] = category
+        if jsonData[line][0]['category'] == '' or jsonData[line][0]['category'] == 'none':
+            if line.partition(' ')[0].lower() == 'list':
+                jsonData[line][0]['category'] = 'list'
+            else:
+                category = findCategory(query)
+                jsonData[line][0]['category'] = category
 
         if jsonData[question][0]['category'] != jsonData[line][0]['category']:
             continue
@@ -349,13 +374,16 @@ def findWrongAnswers(question):
 
         answer = print_handlers[query_type](results, target, metadata)
 
+        if answer in answers:
+            continue
+
         answers.append(answer)
         i += 1
 
     return answers
 
 
-def generateQuiz(question):
+def generateQuiz(questions):
 
     global jsonData
 
@@ -367,9 +395,12 @@ def generateQuiz(question):
         print "-" * 100
 
         # check if question already has its category in the json file
-        if jsonData[question][0]['category'] == '':
-            category = findCategory(query)
-            jsonData[question][0]['category'] = category
+        if jsonData[question][0]['category'] == '' or jsonData[question][0]['category'] == 'none':
+            if question.partition(' ')[0].lower() == 'list':
+                jsonData[question][0]['category'] = 'list'
+            else:
+                category = findCategory(query)
+                jsonData[question][0]['category'] = category
 
         if isinstance(metadata, tuple):
             query_type = metadata[0]
@@ -406,3 +437,4 @@ saveQuestions(questions)
 generateQuiz(questions)
 
 dumpJsonData()
+
