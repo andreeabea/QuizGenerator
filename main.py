@@ -11,6 +11,8 @@ import numpy
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 # use dbpedia
+from quepy.parsing import Lemma
+
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 
 dbpedia = quepy.install("dbpedia")
@@ -58,21 +60,26 @@ def print_define(results, target, metadata=None):
         if result[target]["xml:lang"] == "en":
             answer += result[target]["value"]
 
+    if answer.find(" is") >= 0:
+        return answer.split(" is", 1)[1].split(".", 1)[0]
+
+    if answer.find(" was") >= 0:
+        return answer.split(" was", 1)[1].split(".", 1)[0]
+
     return answer
 
 
 def print_enum(results, target, metadata=None):
     used_labels = []
-    answer = ""
+
     for result in results["results"]["bindings"]:
         if result[target]["type"] == u"literal":
             if result[target]["xml:lang"] == "en":
                 label = result[target]["value"]
                 if label not in used_labels:
                     used_labels.append(label)
-                    answer += label
-                    answer += "\n"
-    return answer
+
+    return random.choice(used_labels)
 
 
 def print_literal(results, target, metadata=None):
@@ -216,17 +223,20 @@ def get_answer(question, sparql):
 def findCategory(query):
     # returns category of question based on the query structure
 
-    if "dbpprop:starring" in query or "dbpedia-owl:Album" in query:
-        return "list"
-
     if "dbpedia-owl:numberOfEpisodes" in query:
         return "number"
 
-    if "dbpedia-owl:author" in query:
-        return "author"
+    if "dbpedia-owl:Film" in query:
+        return "film"
 
-    if "dbpprop:creator" in query:
-        return "person";
+    if "dbpedia-owl:TelevisionShow" in query:
+        return "TVshow"
+
+    if "dbpedia-owl:Album" in query:
+        return "album"
+
+    if "dbpedia-owl:author" in query or "dbpprop:creator" in query:
+        return "person"
 
     if "foaf:Person" in query:
         if "dbpedia-owl:birthPlace" in query:
@@ -234,23 +244,19 @@ def findCategory(query):
         else:
             if "dbo:birthDate" in query:
                 return "number"
+            else:
+                if "rdfs:comment" in query:
+                    return "whoIs"
         return "person"
 
     if "dbpedia-owl:bandMember" in query:
-        #return "bandMember"
-        return "list"
+        return "person"
 
     if "dbpprop:utcOffset" in query:
         return "datetime"
 
-    if "dbpedia:Place" in query:
+    if "dbpedia:Place" in query or "dbpedia-owl:location" in query:
         return "place"
-
-    if "dbpedia-owl:capital" in query:
-        return "capital"
-
-    if "dbpedia-owl:Country" in query:
-        return "country"
 
     if "dbpedia-owl:PopulatedPlace" in query:
         return "number"
@@ -261,17 +267,11 @@ def findCategory(query):
     if "dbpedia-owl:Band" in query:
         return "band"
 
-    if "dbpedia-owl:Album" in query:
-        return "album"
-
-    if "dbpedia-owl:TelevisionShow" in query:
-        return "TVshow"
-
     if "dbpedia-owl:releaseDate" in query or "dbpprop:yearsActive" in query:
         return "datetime"
 
-    if "dbpedia-owl:Film" in query:
-        return "film"
+    if "rdfs:comment" in query:
+        return "definition"
 
     return "none"
 
@@ -335,7 +335,7 @@ def findWrongAnswers(question):
 
     i = 0
     while i < 3:
-        x = random.randint(0, num_lines)
+        x = random.randint(0, num_lines-1)
         with open('questions.txt') as filein:
             line = filein.readline()
             cnt = 0
@@ -349,13 +349,10 @@ def findWrongAnswers(question):
 
         # check if question already has its category in the json file
         if jsonData[line][0]['category'] == '' or jsonData[line][0]['category'] == 'none':
-            if line.partition(' ')[0].lower() == 'list':
-                jsonData[line][0]['category'] = 'list'
-            else:
-                category = findCategory(query)
-                jsonData[line][0]['category'] = category
+            category = findCategory(query)
+            jsonData[line][0]['category'] = category
 
-        if jsonData[question][0]['category'] != jsonData[line][0]['category']:
+        if jsonData[question][0]['category'] != jsonData[line][0]['category'] or line.lower() == question.lower():
             continue
 
         if isinstance(metadata, tuple):
@@ -396,11 +393,8 @@ def generateQuiz(questions):
 
         # check if question already has its category in the json file
         if jsonData[question][0]['category'] == '' or jsonData[question][0]['category'] == 'none':
-            if question.partition(' ')[0].lower() == 'list':
-                jsonData[question][0]['category'] = 'list'
-            else:
-                category = findCategory(query)
-                jsonData[question][0]['category'] = category
+            category = findCategory(query)
+            jsonData[question][0]['category'] = category
 
         if isinstance(metadata, tuple):
             query_type = metadata[0]
@@ -415,7 +409,7 @@ def generateQuiz(questions):
             sparql.setQuery(query)
             sparql.setReturnFormat(JSON)
             results = sparql.query().convert()
-
+        print(query)
         correctAnswer = print_handlers[query_type](results, target, metadata)
 
         answers = findWrongAnswers(question)
