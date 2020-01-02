@@ -18,6 +18,16 @@ class Person(Particle):
         return IsPerson() + HasKeyword(name)
 
 
+class BirthdayQuestion(QuestionTemplate):
+
+    regex = Pos("WRB") + Lemma("be") + Person() + Lemma("born") + \
+        Question(Pos("."))
+
+    def interpret(self, match):
+        birth_date = BirthDateOf(match.person)
+        return birth_date, "literal"
+
+
 class WhoIs(QuestionTemplate):
     """
     Ex: "Who is Tom Cruise?"

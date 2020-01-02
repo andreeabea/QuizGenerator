@@ -11,8 +11,6 @@ import numpy
 from SPARQLWrapper import SPARQLWrapper, JSON
 
 # use dbpedia
-from quepy.parsing import Lemma
-
 sparql = SPARQLWrapper("http://dbpedia.org/sparql")
 
 dbpedia = quepy.install("dbpedia")
@@ -31,13 +29,13 @@ def getQuestion():
 # transform question to sparql query
 def get_SparqlQuery(question):
     target, query, metadata = dbpedia.get_query(question)
-    # query = query[:-2]
+    # filter answers only in English
     # query += "FILTER (langMatches(lang(?x2),\"en\"))\n}"
     return query
 
 
 # get answers as list from sparql query
-def get_answer_list(sparql_query, sparql):
+def get_answer_list_test(sparql_query, sparql):
     sparql.setQuery(sparql_query)
     sparql.setReturnFormat(JSON)
     try:
@@ -54,8 +52,9 @@ def get_answer_list(sparql_query, sparql):
     return results
 
 
-def print_define(results, target, metadata=None):
+def definition_handler(results, target, metadata=None):
     answer = ""
+
     for result in results["results"]["bindings"]:
         if result[target]["xml:lang"] == "en":
             answer += result[target]["value"]
@@ -69,7 +68,7 @@ def print_define(results, target, metadata=None):
     return answer
 
 
-def print_enum(results, target, metadata=None):
+def enum_handler(results, target, metadata=None):
     used_labels = []
 
     for result in results["results"]["bindings"]:
@@ -82,8 +81,9 @@ def print_enum(results, target, metadata=None):
     return random.choice(used_labels)
 
 
-def print_literal(results, target, metadata=None):
+def literal_answer_handler(results, target, metadata=None):
     answer = ""
+
     for result in results["results"]["bindings"]:
         literal = result[target]["value"]
         if metadata:
@@ -94,8 +94,8 @@ def print_literal(results, target, metadata=None):
     return answer
 
 
-# print time format for questions like "What time is it in Romania?"
-def print_time(results, target, metadata=None):
+# time format for questions like "What time is it in Romania?"
+def datetime_handler(results, target, metadata=None):
     gmt = time.mktime(time.gmtime())
     gmt = datetime.datetime.fromtimestamp(gmt)
     answer = ""
@@ -143,9 +143,7 @@ def print_time(results, target, metadata=None):
     return answer
 
 
-def print_age(results, target, metadata=None):
-    # assert len(results["results"]["bindings"]) == 1
-    # because there might be more results
+def age_handler(results, target, metadata=None):
     answer = ""
 
     if len(results["results"]["bindings"]) == 1:
@@ -166,30 +164,6 @@ def print_age(results, target, metadata=None):
     return answer
 
 
-def wikipedia2dbpedia(wikipedia_url):
-    """
-    Given a wikipedia URL returns the dbpedia resource
-    of that page.
-    """
-
-    query = """
-    PREFIX foaf: <http://xmlns.com/foaf/0.1/>
-    SELECT * WHERE {
-        ?url foaf:isPrimaryTopicOf <%s>.
-    }
-    """ % wikipedia_url
-
-    sparql.setQuery(query)
-    sparql.setReturnFormat(JSON)
-    results = sparql.query().convert()
-
-    if not results["results"]["bindings"]:
-        print "Snorql URL not found"
-        sys.exit(1)
-    else:
-        return results["results"]["bindings"][0]["url"]["value"]
-
-
 def get_answer(question, sparql):
     if "-d" in sys.argv:
         quepy.set_loglevel("DEBUG")
@@ -197,10 +171,6 @@ def get_answer(question, sparql):
 
     if len(sys.argv) > 1:
         question = " ".join(sys.argv[1:])
-
-        if question.count("wikipedia.org"):
-            print wikipedia2dbpedia(sys.argv[1])
-            sys.exit(0)
 
     target, query, metadata = dbpedia.get_query(question)
 
@@ -279,11 +249,14 @@ def findCategory(query):
 def getQuestions():
     i = 0
     questions = []
-    while i < 1:
+
+    nbQuestions = input("Number of questions of the quiz: ")
+
+    while i < nbQuestions:
         question = getQuestion()
         query = get_answer(question, sparql)
 
-        if query != "Query not generated :(\n" and query != "No answer found":
+        if query != "Query not generated :(\n" and query != "No answer found" or question.startswith("Is"):
             i += 1
             questions.append(question)
         else:
@@ -316,12 +289,12 @@ def saveQuestions(questions):
     dumpJsonData()
 
 
-print_handlers = {
-        "define": print_define,
-        "enum": print_enum,
-        "time": print_time,
-        "literal": print_literal,
-        "age": print_age,
+data_handlers = {
+        "define": definition_handler,
+        "enum": enum_handler,
+        "time": datetime_handler,
+        "literal": literal_answer_handler,
+        "age": age_handler,
     }
 
 
@@ -369,7 +342,7 @@ def findWrongAnswers(question):
             sparql.setReturnFormat(JSON)
             results = sparql.query().convert()
 
-        answer = print_handlers[query_type](results, target, metadata)
+        answer = data_handlers[query_type](results, target, metadata)
 
         if answer in answers:
             continue
@@ -385,10 +358,18 @@ def generateQuiz(questions):
     global jsonData
 
     for question in questions:
+
+        initQuestion = question
+        isTrueFalseQuestion = False
+        if question.startswith("Is"):
+            isTrueFalseQuestion = True
+            trueFalseAnswer = question.split(" ")[1]
+            question = question.replace("Is " + trueFalseAnswer, "What is")
+
         target, query, metadata = dbpedia.get_query(question)
 
         print "-" * 100
-        print question
+        print initQuestion
         print "-" * 100
 
         # check if question already has its category in the json file
@@ -409,21 +390,35 @@ def generateQuiz(questions):
             sparql.setQuery(query)
             sparql.setReturnFormat(JSON)
             results = sparql.query().convert()
-        print(query)
-        correctAnswer = print_handlers[query_type](results, target, metadata)
 
-        answers = findWrongAnswers(question)
-        answers.append(correctAnswer)
+        correctAnswer = data_handlers[query_type](results, target, metadata)
 
-        randomPositions = numpy.random.permutation(4)
-        for i in range(4):
-            print(str(i) + ". " + answers[randomPositions[i]])
+        if isTrueFalseQuestion:
+            print(str(0) + ". " + "True")
+            print(str(1) + ". " + "False")
+            answers = None
+        else:
+            answers = findWrongAnswers(question)
+            answers.append(correctAnswer)
+
+            randomPositions = numpy.random.permutation(4)
+            for i in range(4):
+                print(str(i) + ". " + answers[randomPositions[i]])
 
         givenAnswer = input("Choose an answer: ")
-        if answers[randomPositions[givenAnswer]] == correctAnswer:
-            print("Correct!\n")
+
+        if answers is not None:
+            if answers[randomPositions[givenAnswer]] == correctAnswer:
+                    print("Correct!\n")
         else:
-            print("Incorrect!:(\n")
+            if isTrueFalseQuestion:
+                if (trueFalseAnswer == correctAnswer and givenAnswer == 0) \
+                        or (trueFalseAnswer != correctAnswer and givenAnswer == 1):
+                    print("Correct!\n")
+                else:
+                    print("Incorrect!:(\nThe correct answer is: " + correctAnswer + " \n")
+            else:
+                print("Incorrect!:(\nThe correct answer is: "+correctAnswer+" \n")
 
 
 questions = getQuestions()
@@ -431,4 +426,3 @@ saveQuestions(questions)
 generateQuiz(questions)
 
 dumpJsonData()
-

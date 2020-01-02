@@ -8,7 +8,7 @@ from refo import Plus, Question
 from quepy.dsl import HasKeyword
 from quepy.parsing import Lemma, Pos, QuestionTemplate, Token, Particle
 from dsl import IsCountry, IncumbentOf, CapitalOf, \
-    LabelOf, LanguageOf, PopulationOf, PresidentOf
+    LabelOf, LanguageOf, PopulationOf, PresidentOf, IsCapital
 
 
 class Country(Particle):
@@ -17,6 +17,14 @@ class Country(Particle):
     def interpret(self, match):
         name = match.words.tokens.title()
         return IsCountry() + HasKeyword(name)
+
+
+class Capital(Particle):
+    regex = Plus(Pos("DT") | Pos("NN") | Pos("NNS") | Pos("NNP") | Pos("NNPS"))
+
+    def interpret(self, match):
+        name = match.words.tokens.title()
+        return IsCapital() + HasKeyword(name)
 
 
 class PresidentOfQuestion(QuestionTemplate):
@@ -33,6 +41,17 @@ class PresidentOfQuestion(QuestionTemplate):
         incumbent = IncumbentOf(president)
         label = LabelOf(incumbent)
 
+        return label, "enum"
+
+
+class IsCapitalOfQuestion(QuestionTemplate):
+
+    regex = Token("is") + Capital() + Pos("DT") + Lemma("capital") + Pos("IN") + \
+            Question(Pos("DT")) + Country() + Question(Pos("."))
+
+    def interpret(self, match):
+        capital = CapitalOf(match.country)
+        label = LabelOf(capital)
         return label, "enum"
 
 
