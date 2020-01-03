@@ -20,6 +20,7 @@ class Person(Particle):
 
 class BirthdayQuestion(QuestionTemplate):
 
+    """When was Bill Gates born?"""
     regex = Pos("WRB") + Lemma("be") + Person() + Lemma("born") + \
         Question(Pos("."))
 
@@ -30,7 +31,7 @@ class BirthdayQuestion(QuestionTemplate):
 
 class WhoIs(QuestionTemplate):
     """
-    Ex: "Who is Tom Cruise?"
+    Ex: "Who is Bill Gates?"
     """
 
     regex = Lemma("who") + Lemma("be") + Person() + \

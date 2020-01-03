@@ -161,6 +161,7 @@ class ActorsOfQuestion(QuestionTemplate):
         return actor, "enum"
 
 
+# not always working
 class PlotOfQuestion(QuestionTemplate):
     """
     Ex: "what is Shame about?"

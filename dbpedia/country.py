@@ -27,6 +27,7 @@ class Capital(Particle):
         return IsCapital() + HasKeyword(name)
 
 
+# NOT WORKING for any country
 class PresidentOfQuestion(QuestionTemplate):
     """
     Regex for questions about the president of a country.
@@ -73,6 +74,7 @@ class CapitalOfQuestion(QuestionTemplate):
 
 # FIXME: NOT WORKING - the generated query needs FILTER isLiteral() to the head
 # because dbpedia sometimes returns different things
+# working only for some countries
 class LanguageOfQuestion(QuestionTemplate):
     """
     Regex for questions about the language spoken in a country.
